@@ -4,10 +4,11 @@ const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
+var fetchuser = require("../middleware/fetchuser")
 
 const JWT_SECRET = "Surumerababuhai";
 
-//create a user using: POST "/api/auth/createuser". No login required
+//Route 1: create a user using: POST "/api/auth/createuser". No login required
 router.post(
   "/createuser",
   [
@@ -29,8 +30,8 @@ router.post(
           .status(400)
           .json({ error: "Sorry a user with this email already exists" });
       }
-      const saltRounds = 10;
-      const secPas = await bcrypt.hash(req.body.password, saltRounds);
+      const salt = await bcrypt.genSalt(10);
+      const secPas = await bcrypt.hash(req.body.password, salt);
       //Create a new user
       user = await User.create({
         name: req.body.name,
@@ -44,9 +45,7 @@ router.post(
       };
       const authToken = jwt.sign(data, JWT_SECRET);
       res.json({ authToken });
-      // const decoded = jwt.verify(authToken, JWT_SECRET);
-      // res.json(decoded);
-      // console.log(decoded);
+      
     } catch (error) {
       console.log(error.message);
       res.status(500).send("Some error occured");
@@ -54,7 +53,7 @@ router.post(
   }
 );
 
-// Authenticate a User: POST "api/auth/login". No login required
+//Route 2: Authenticate a User: POST "api/auth/login". No login required
 router.post(
   "/login",
   [
@@ -93,4 +92,18 @@ router.post(
   }
 );
 
-module.exports = router;
+//Route 3: Get loged in  User details: POST "api/auth/getuser". login  required
+router.post(
+  "/getuser",fetchuser, async (req, res) => {
+try{
+  let userId = req.user.id;
+  const user = await User.findById(userId).select("-password")
+  res.send(user)
+
+}catch(error){
+  console.log(error.message);
+  res.status(500).send("Internal Serverrr error occured");
+}
+});
+
+module.exports = router; 

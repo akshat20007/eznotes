@@ -7,6 +7,7 @@ var jwt = require("jsonwebtoken");
 var fetchuser = require("../middleware/fetchuser")
 
 const JWT_SECRET = "Surumerababuhai";
+let success =false;
 
 //Route 1: create a user using: POST "/api/auth/createuser". No login required
 router.post(
@@ -20,7 +21,7 @@ router.post(
     //If there are error return bad request and the error
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success,errors: errors.array() });
     }
     //Check whether the user with this email exist already
     try {
@@ -28,7 +29,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "Sorry a user with this email already exists" });
+          .json({success, error: "Sorry a user with this email already exists" });
       }
       const salt = await bcrypt.genSalt(10);
       const secPas = await bcrypt.hash(req.body.password, salt);
@@ -44,11 +45,12 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, JWT_SECRET);
-      res.json({ authToken });
+       success =true
+      res.json({ success,authToken });
       
     } catch (error) {
       console.log(error.message);
-      res.status(500).send("Some error occured");
+      res.status(500).send(success, "Some error occured");
     }
   }
 );
@@ -63,6 +65,7 @@ router.post(
   ],
    async (req, res) => {
     //If there are error return bad request and the error
+   
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -76,7 +79,8 @@ router.post(
 
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
-        return res.status(400).json({ error: "Sorry Password doesn't exist" });
+        
+        return res.status(400).json({ success, error: "Sorry Password doesn't exist" });
       }
       const data = {
         user: {
@@ -84,7 +88,8 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, JWT_SECRET);
-      res.json({ authToken });
+      success = true;
+      res.json({ success,authToken });
     } catch (error) {
       console.log(error.message);
       res.status(500).send("Internal Server error occured");
@@ -102,7 +107,7 @@ try{
 
 }catch(error){
   console.log(error.message);
-  res.status(500).send("Internal Serverrr error occured");
+  res.status(500).send(success, "Internal Serverrr error occured");
 }
 });
 

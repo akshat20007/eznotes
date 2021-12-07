@@ -60,10 +60,12 @@ export const Notes = () => {
                 value={note.etitle}
                 aria-describedby="emailHelp"
                 onChange={onChange}
+                minLength={5}
+                required
               /> 
             </div>
             <div className="mb-3">
-              <label htmlFor="edescription" className="form-label">
+              <label htmlFor="edescription" className="form-label" >
                 Description
               </label>
               <input
@@ -73,6 +75,8 @@ export const Notes = () => {
                 name="edescription"
                 value={note.edescription}
                 onChange={onChange}
+                minLength={5}
+                required
               />
             </div>
             <div className="mb-3">
@@ -94,13 +98,16 @@ export const Notes = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose,handleClick}>
+          <Button disabled={note.etitle.length <5 || note.edescription.length<5} variant="primary" onClick={handleClose,handleClick}>
             Update Note
           </Button>
         </Modal.Footer>
       </Modal>
       <div className="row my-3">
         <h1> Your Note</h1>
+        <div className='conatiner'>
+        {notes.length===0 && 'No notes to diaplay'}
+        </div>
         {notes.map((note) => {
           return (
             <Noteitem key={note._id} updateNote={updateNote} note={note} />

@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Signup = () => {
+export const Signup = (props) => {
   const [credentials, setCredentials] = useState({name:"", email: "", password: "", cpassword:"" });
   let history = useNavigate();
   const handleSubmit = async (e) => {
@@ -20,17 +20,20 @@ export const Signup = () => {
     console.log(json);
     if (json.success) {
       //Save the auth token and redirect
-      localStorage.setItem("token", json.authtoken);
+      localStorage.setItem("token", json.authToken);
       history("/");
+      props.showAlert("Successfully created your account", "Success")
     } else {
-      alert("Incalid credentials");
+        props.showAlert("Invalid credentials", "danger")
     }
   };
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   };
   return (
-    <div className="container">
+    <div className="container mt-3">
+            <h2>Sign up to continue to ezNotes</h2>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">

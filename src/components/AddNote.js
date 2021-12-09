@@ -2,7 +2,7 @@ import React from "react";
 import { useContext, useState } from "react";
 import noteContext from "../context/notes/NoteContext";
 
-export const AddNote = () => {
+export const AddNote = (props) => {
   const context = useContext(noteContext);
   //Destructuring
   const { addNote } = context;
@@ -17,6 +17,7 @@ export const AddNote = () => {
     setNote(  {title: "",
     description: "",
     tag: ""})
+    props.showAlert("Note was added succesfully", "success")
   };
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });

@@ -13,8 +13,7 @@ const NoteState = (props) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE5Zjc1NDI1ODJmMDEzYTE5YTBjNGYxIn0sImlhdCI6MTYzNzg0MDIyMn0.dQKf1_L6lnaI2_RW5jltVJuJcSarWb1fLNyaTLviKsU",
+        "auth-token": localStorage.getItem('token'),
       },
     });
     const json = await response.json();
@@ -28,8 +27,7 @@ const NoteState = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE5Zjc1NDI1ODJmMDEzYTE5YTBjNGYxIn0sImlhdCI6MTYzNzg0MDIyMn0.dQKf1_L6lnaI2_RW5jltVJuJcSarWb1fLNyaTLviKsU",
+        "auth-token": localStorage.getItem('token'),
       },
       body: JSON.stringify({ title, description, tag }),
     });
@@ -44,11 +42,11 @@ const NoteState = (props) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE5Zjc1NDI1ODJmMDEzYTE5YTBjNGYxIn0sImlhdCI6MTYzNzg0MDIyMn0.dQKf1_L6lnaI2_RW5jltVJuJcSarWb1fLNyaTLviKsU",
+        "auth-token": localStorage.getItem('token'),
       },
     });
     const json = response.json();
+    console.log(json)
     const newNotes = notes.filter((note) => {
       return note._id !== id;
     });
@@ -62,12 +60,12 @@ const NoteState = (props) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjE5Zjc1NDI1ODJmMDEzYTE5YTBjNGYxIn0sImlhdCI6MTYzNzg0MDIyMn0.dQKf1_L6lnaI2_RW5jltVJuJcSarWb1fLNyaTLviKsU",
+        "auth-token": localStorage.getItem('token'),
       },
       body: JSON.stringify({ title, description, tag }),
     });
     const json = await response.json();
+    console.log(json)
 
     //Logic to edit in client
     for (let index = 0; index < notes.length; index++) {
